@@ -13,7 +13,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ableco/telegraf/telegraf
+          images: ghcr.io/ableco/telegraf/telegraf
           tag-semver: |
             {{version}}
             {{major}}.{{minor}}
