@@ -86,6 +86,7 @@ type DeploymentStatus struct {
 }
 
 type WorkflowRun struct {
+	ID			int    `json:"id"`
 	Name        string `json:"name"`
 	Status      string `json:"status"`
 	Conclusion  string `json:"conclusion"`
@@ -94,6 +95,7 @@ type WorkflowRun struct {
 }
 
 type CheckRun struct {
+	ID			int    `json:"id"`
 	Name        string `json:"name"`
 	Status      string `json:"status"`
 	Conclusion  string `json:"conclusion"`
@@ -750,8 +752,10 @@ func (s WorkflowRunEvent) NewMetric() telegraf.Metric {
 		"name":       s.WorkflowRun.Name,
 	}
 	f := map[string]interface{}{
-		"created_at":  		createdAt.Unix(),
-		"updated_at":  		updatedAt.Unix(),
+		"id": 				s.WorkflowRun.ID,
+		"started_at":  		createdAt.Unix(),
+		"completed_at":  	updatedAt.Unix(),
+		"execution_time":	updatedAt.Sub(createdAt).Seconds(),
 	}
 	m, err := metric.New(meas, t, f, time.Now())
 	if err != nil {
@@ -784,8 +788,10 @@ func (s CheckRunEvent) NewMetric() telegraf.Metric {
 		"name":       s.CheckRun.Name,
 	}
 	f := map[string]interface{}{
+		"id": 				s.CheckRun.ID,
 		"started_at":  		startedAt.Unix(),
 		"completed_at":  	completedAt.Unix(),
+		"execution_time":	completedAt.Sub(startedAt).Seconds(),
 	}
 	m, err := metric.New(meas, t, f, time.Now())
 	if err != nil {
